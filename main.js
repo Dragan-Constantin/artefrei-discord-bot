@@ -34,7 +34,7 @@ client.on('messageCreate', async (message) => {
 
   // Handle command reloading
   if (commandName === 'reload') {
-    if (message.author.id === process.env.OWNERS) {  // Optional: only allow specific users
+    if (message.member.permissions.has('ADMINISTRATOR') && ownerIds.includes(message.author.id)) {  // Optional: only allow specific users
       updateCommands(client, message);
     } else {
       message.reply('You do not have permission to reload commands.');
