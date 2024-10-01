@@ -32,9 +32,9 @@ client.on('messageCreate', async (message) => {
   const args = message.content.slice(PREFIX.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
-  // Handle command reloading
-  if (commandName === 'reload') {
-    if (message.member.permissions.has('ADMINISTRATOR') && ownerIds.includes(message.author.id)) {  // Optional: only allow specific users
+  // Handles bot update and command reloading
+  if (commandName === 'update') {
+    if (message.member.permissions.has('ADMINISTRATOR') && process.env.OWNERS.includes(message.author.id)) {  // Optional: only allow specific users
       updateCommands(client, message);
     } else {
       message.reply('You do not have permission to reload commands.');
