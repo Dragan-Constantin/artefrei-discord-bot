@@ -49,13 +49,21 @@ const scheduleArtober = async (channel) => {
         
         if (i > 0) {
           const previousTheme = themes[i - 1];
-          await channel.threads.create({
-            name: `Thème du ${i}/31 : ${previousTheme}`,
-            autoArchiveDuration: AUTO_ARCHIVE_DURATION,
-            startMessage: message.id,
-            type: ChannelType.GuildPublicThread,
-          });
         }
+        // await channel.threads.create({
+        await message.startThread({
+          name:`Artober-${currentDay+1}-31`,
+          // reason: `Thème du ${i}/31 : ${previousTheme}.`,
+          reason: `Thème du ${currentDay+1}/31 : ${themes[currentDay]}.`,
+          autoArchiveDuration: AUTO_ARCHIVE_DURATION,
+          // startMessage: message.content,
+          startMessage: `Postez vos créations ici !`,
+          type: ChannelType.PublicThread,
+        }).then(thread => {
+          logger.info(`Successfully created thread: ${thread.name}`);
+        }).catch(error => {
+          logger.error(`Failed to create thread: ${error.message}`);
+        });
         
         currentDay = day;
         logger.info(`Sent theme for day ${day}: ${theme}`);
@@ -74,16 +82,23 @@ const forceSendCurrentDayTheme = async (channel) => {
   const theme = themes[currentDay];
   try {
     const message = await channel.send(`🎨 ${day}/31, thème du jour : **${theme}**`);
-    
     if (currentDay > 0) {
       const previousTheme = themes[currentDay - 1];
-      await channel.threads.create({
-        name: `Thème du ${currentDay}/31 : ${previousTheme}`,
-        autoArchiveDuration: AUTO_ARCHIVE_DURATION,
-        startMessage: message.id,
-        type: ChannelType.GuildPublicThread,
-      });
     }
+    // await channel.threads.create({
+    await message.startThread({
+      name:`Artober-${currentDay+1}-31`,
+      // reason: `Thème du ${i}/31 : ${previousTheme}.`,
+      reason: `Thème du ${currentDay+1}/31 : ${themes[currentDay]}.`,
+      autoArchiveDuration: AUTO_ARCHIVE_DURATION,
+      // startMessage: message.content,
+      startMessage: `Postez vos créations ici !`,
+      type: ChannelType.PublicThread,
+    }).then(thread => {
+      logger.info(`Successfully created thread: ${thread.name}`);
+    }).catch(error => {
+      logger.error(`Failed to create thread: ${error.message}`);
+    });
     
     currentDay = day;
     logger.info(`Force sent theme for day ${day}: ${theme}`);
