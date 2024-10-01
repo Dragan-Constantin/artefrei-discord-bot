@@ -10,8 +10,8 @@ module.exports = {
             return message.reply('You do not have permission to restart the bot.');
         }
         const commands = message.client.commands;
-        let helpMessage = 'Here is a list of available commands:\n';
-        
+        let helpMessage = 'Here is a list of available commands:\n- **update**: Dynamically updates the bot from GitHub (commands only atm)\n';
+
         commands.forEach(command => {
             helpMessage += `- **${command.name}**: ${command.description}\n`;
         });
