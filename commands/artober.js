@@ -1,6 +1,7 @@
-const { PermissionsBitField, ChannelType } = require('discord.js');
+const { PermissionsBitField, ChannelType, AttachmentBuilder } = require('discord.js');
 const schedule = require('node-schedule');
 const logger = require('../utils/logger');
+const fs = require('fs');
 
 // Themes for October
 const themes = [
@@ -160,6 +161,45 @@ module.exports = {
                 await scheduleArtober(channel);
                 message.reply('Artober has been reset.');
                 logger.info('Artober reset by ' + message.author.tag);
+                break;
+
+            case 'rules':
+                try {
+                    const rules = fs.readFileSync('./assets/texts/artober_rules.txt', 'utf-8');
+                    const themeImage = new AttachmentBuilder('./assets/images/artober_themes.png');
+
+                    // Send a private message (DM) with the rules and the image
+                    await message.author.send({
+                        content: `Here are the rules for Art'Ober:\n\n${rules}`,
+                        files: [themeImage]
+                    });
+
+                    // message.reply('The rules and themes have been sent to you in a private message.');
+                    await message.delete().catch(err => console.error('Failed to delete the command message:', err));
+                    logger.info('Sent Artober rules and themes to ' + message.author.tag);
+                } catch (error) {
+                    logger.error('Error sending rules and themes: ' + error.message);
+                    message.reply('There was an error sending the rules and themes.');
+                }
+                break;
+
+            case 'themes':
+                try {
+                    const themeImage = new AttachmentBuilder('./assets/images/artober_themes.png');
+
+                    // Send a private message (DM) with the themes image
+                    await message.author.send({
+                        content: `Here are the themes for Art'Ober:`,
+                        files: [themeImage]
+                    });
+
+                    // message.reply('The themes have been sent to you in a private message.');
+                    await message.delete().catch(err => console.error('Failed to delete the command message:', err));
+                    logger.info('Sent Artober themes to ' + message.author.tag);
+                } catch (error) {
+                    logger.error('Error sending themes: ' + error.message);
+                    message.reply('There was an error sending the themes.');
+                }
                 break;
 
             default:
